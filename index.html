@@ -20,6 +20,9 @@
     tailwind.config = {
       theme: {
         extend: {
+          screens: {
+            'xs': '480px',
+          },
           fontFamily: {
             sans: ['"Plus Jakarta Sans"', 'sans-serif'],
           },
@@ -36,6 +39,18 @@
     .modal-transition {
       transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
+    
+    /* Mobile Safe Area helper */
+    .pb-safe {
+      padding-bottom: env(safe-area-inset-bottom, 0);
+    }
+
+    /* Prevent bottom navigation bar from overlapping content on mobile */
+    @media (max-width: 767px) {
+      body {
+        padding-bottom: 4.5rem;
+      }
+    }
   </style>
 </head>
 <body class="bg-[#faf9f6] text-neutral-800 font-sans antialiased min-h-screen flex flex-col justify-between selection:bg-neutral-900 selection:text-white">
@@ -43,8 +58,8 @@
   <!-- Header / Navigation Bar -->
   <header class="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-neutral-100/50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-      <a href="#" class="text-xl sm:text-2xl font-extrabold tracking-wider text-neutral-950 flex items-center gap-2.5">
-        <svg class="w-8 h-8 text-amber-800 flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <a href="#" class="text-lg xs:text-xl sm:text-2xl font-extrabold tracking-wider text-neutral-950 flex items-center gap-1.5 xs:gap-2.5">
+        <svg class="w-6 h-6 xs:w-8 xs:h-8 text-amber-800 flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M12 2L3 7v10l9 5 9-5V7l-9-5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
           <path d="M12 7c0-1.5 1-2 1.5-1.5.5.5 0 1.5-1.5 1.5z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
           <path d="M7 11.5L12 16l5-4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -61,13 +76,13 @@
       </nav>
 
       <!-- Cart, History & Auth Buttons -->
-      <div class="flex items-center gap-2">
+      <div class="flex items-center gap-1.5 xs:gap-2">
 
         <!-- Auth Button -->
         <div id="auth-area" class="flex items-center">
           <!-- Shown when logged out -->
           <button id="login-btn-header" onclick="openAuthModal('login')"
-            class="hidden items-center gap-1.5 px-4 py-2 bg-neutral-950 hover:bg-amber-800 text-white text-xs font-bold rounded-xl transition-all duration-200 focus:outline-none">
+            class="hidden items-center gap-1.5 px-3 py-2 sm:px-4 bg-neutral-950 hover:bg-amber-800 text-white text-xs font-bold rounded-xl transition-all duration-200 focus:outline-none">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
               <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
             </svg>
@@ -75,7 +90,7 @@
           </button>
           <!-- Shown when logged in -->
           <div id="user-menu-btn" class="hidden relative">
-            <button onclick="toggleUserMenu()" class="flex items-center gap-2 px-3 py-2 bg-white border border-neutral-200 hover:border-neutral-400 rounded-xl transition-all duration-200 focus:outline-none">
+            <button onclick="toggleUserMenu()" class="flex items-center gap-2 px-2.5 py-2 bg-white border border-neutral-200 hover:border-neutral-400 rounded-xl transition-all duration-200 focus:outline-none">
               <div id="user-avatar" class="w-6 h-6 rounded-full bg-amber-800 text-white text-[10px] font-black flex items-center justify-center flex-shrink-0"></div>
               <span id="user-display-name" class="text-xs font-bold text-neutral-800 hidden sm:block max-w-[100px] truncate"></span>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3 h-3 text-neutral-400">
@@ -98,21 +113,22 @@
           </div>
         </div>
 
-        <div class="w-px h-6 bg-neutral-200"></div>
+        <div class="hidden md:block w-px h-6 bg-neutral-200"></div>
 
         <button 
           id="history-btn" 
           onclick="openHistory()"
-          class="relative p-2.5 bg-white border border-neutral-200 hover:border-neutral-400 rounded-xl transition-all duration-200 focus:outline-none flex items-center justify-center"
+          class="hidden md:flex relative p-2.5 bg-white border border-neutral-200 hover:border-neutral-400 rounded-xl transition-all duration-200 focus:outline-none items-center justify-center"
           title="Riwayat Pembelian">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 text-neutral-800">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
           </svg>
+          <span class="history-count-badge absolute -top-1.5 -right-1.5 bg-neutral-900 text-white text-[10px] font-bold w-5.5 h-5.5 rounded-full flex items-center justify-center border-2 border-white scale-0 transition-transform duration-200 min-w-[20px] p-0.5">0</span>
         </button>
         <button 
           id="cart-btn" 
           onclick="openCart()"
-          class="relative p-2.5 bg-white border border-neutral-200 hover:border-neutral-400 rounded-xl transition-all duration-200 focus:outline-none flex items-center justify-center"
+          class="hidden md:flex relative p-2.5 bg-white border border-neutral-200 hover:border-neutral-400 rounded-xl transition-all duration-200 focus:outline-none items-center justify-center"
           title="Keranjang Belanja">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 text-neutral-800">
             <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
@@ -134,7 +150,7 @@
           <div>
             <span class="text-xs font-bold text-amber-800 uppercase tracking-widest bg-amber-50 px-3 py-1.5 rounded-full">Koleksi 2026</span>
             <h1 class="text-4xl sm:text-6xl font-black tracking-tight text-neutral-950 mt-4 leading-[1.1]">
-              Kualitas Terbaik <br>Untuk Gaya <br><span class="text-amber-800">Minimalis Anda.</span>
+              Kualitas Terbaik <br class="hidden sm:inline">Untuk Gaya <br class="hidden sm:inline"><span class="text-amber-800">Minimalis Anda.</span>
             </h1>
             <p class="mt-6 text-neutral-500 text-base sm:text-lg max-w-lg leading-relaxed">
               Katun premium pilihan dengan fitting modern. Koleksi kaos basic minimalis premium terlengkap dalam genggaman Anda.
@@ -160,8 +176,8 @@
     <!-- USP / Features Section -->
     <section id="layanan" class="py-16 bg-[#faf9f6]">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div class="bg-white p-8 rounded-2xl border border-neutral-100 shadow-sm flex items-start gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+          <div class="bg-white p-6 sm:p-8 rounded-2xl border border-neutral-100 shadow-sm flex items-start gap-4">
             <div class="p-3 bg-amber-50 text-amber-800 rounded-xl">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z" />
@@ -172,7 +188,7 @@
               <p class="text-neutral-500 text-sm mt-1">Kami menggunakan kain rajut terpilih kelas ekspor dengan handfeel super lembut.</p>
             </div>
           </div>
-          <div class="bg-white p-8 rounded-2xl border border-neutral-100 shadow-sm flex items-start gap-4">
+          <div class="bg-white p-6 sm:p-8 rounded-2xl border border-neutral-100 shadow-sm flex items-start gap-4">
             <div class="p-3 bg-amber-50 text-amber-800 rounded-xl">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9.53 16.122a3 3 0 00-5.78 1.128 2.25 2.25 0 01-2.4 2.245 4.5 4.5 0 008.4-2.245c0-.399-.078-.78-.22-1.128zm0 0a15.998 15.998 0 003.388-1.62m-5.043-.025a15.994 15.994 0 01-1.622-3.395m3.42 3.42a15.995 15.995 0 005.043-.025m-8.42 2.245a15.997 15.997 0 003.395-1.622m8.88-3.128a3 3 0 11-5.741-1.1m5.741 1.1c.359.112.724.165 1.082.158a2.25 2.25 0 012.245 2.4 4.5 4.5 0 00-8.4-2.245c0 .388.078.759.22 1.1m0 0a15.998 15.998 0 003.388 1.62m0 0a15.997 15.997 0 003.395-1.622m-8.88-3.128a15.994 15.994 0 01-1.622-3.395m0 0A3 3 0 004.545 6.03a2.25 2.25 0 01-2.4-2.245 4.5 4.5 0 008.4 2.245c0-.399-.078-.78-.22-1.128zm0 0a15.995 15.995 0 005.043-.025m0 0a15.997 15.997 0 003.395-1.622M9.53 6.122a15.997 15.997 0 013.388 1.622m0 0a15.997 15.997 0 003.388-1.622m1.112 1.112a15.998 15.998 0 00-1.62-3.388m0 0a3 3 0 115.74 1.1c-.359-.112-.724-.165-1.08-.158a2.25 2.25 0 01-2.245-2.4 4.5 4.5 0 00-8.4 2.245c0-.388.078-.759.22-1.1" />
@@ -183,7 +199,7 @@
               <p class="text-neutral-500 text-sm mt-1">Tersedia dalam berbagai ukuran dari S hingga XXL dengan fitting yang pas.</p>
             </div>
           </div>
-          <div class="bg-white p-8 rounded-2xl border border-neutral-100 shadow-sm flex items-start gap-4">
+          <div class="bg-white p-6 sm:p-8 rounded-2xl border border-neutral-100 shadow-sm flex items-start gap-4">
             <div class="p-3 bg-amber-50 text-amber-800 rounded-xl">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
@@ -201,13 +217,13 @@
     <!-- Product Catalog Section -->
     <section id="katalog" class="py-16 sm:py-24 bg-white">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center max-w-xl mx-auto mb-16">
+        <div class="text-center max-w-xl mx-auto mb-12 sm:mb-16">
           <h2 class="text-3xl font-extrabold text-neutral-900 tracking-tight">Koleksi Kaos Terbaik</h2>
           <p class="text-neutral-500 mt-3 text-sm">Pilih produk kaos favorit Anda dan tentukan ukuran yang paling sesuai.</p>
         </div>
         
         <!-- Rendered items container -->
-        <div id="product-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div id="product-list" class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-8">
           <!-- Dynamically populated from JS -->
         </div>
       </div>
@@ -704,6 +720,40 @@
       <!-- Items dynamically populated -->
     </div>
   </aside>
+
+  <!-- Mobile Bottom Navigation Bar -->
+  <div class="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-neutral-150 shadow-[0_-4px_12px_rgba(0,0,0,0.03)] md:hidden flex justify-around items-center h-16 pb-safe px-2">
+    <!-- Home button -->
+    <a href="#" class="flex flex-col items-center justify-center text-neutral-500 hover:text-amber-800 transition-colors py-1 flex-1">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+      </svg>
+      <span class="text-[9px] font-bold mt-1">Beranda</span>
+    </a>
+    <!-- Catalog button -->
+    <a href="#katalog" class="flex flex-col items-center justify-center text-neutral-500 hover:text-amber-800 transition-colors py-1 flex-1">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-9 0v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349m-16.5 0V21m.75-11.651v-1.75a2.25 2.25 0 012.25-2.25h13.5a2.25 2.25 0 012.25 2.25v1.75m-18 0l1.75-3.5m14.5 3.5l-1.75-3.5" />
+      </svg>
+      <span class="text-[9px] font-bold mt-1">Katalog</span>
+    </a>
+    <!-- History button -->
+    <button onclick="openHistory()" class="relative flex flex-col items-center justify-center text-neutral-500 hover:text-amber-800 transition-colors py-1 flex-1 focus:outline-none">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+      </svg>
+      <span class="text-[9px] font-bold mt-1">Riwayat</span>
+      <span class="history-count-badge absolute top-0.5 right-4 xs:right-6 bg-neutral-900 text-white text-[8px] font-bold w-4 h-4 rounded-full flex items-center justify-center border border-white scale-0 transition-transform duration-200">0</span>
+    </button>
+    <!-- Cart button -->
+    <button onclick="openCart()" class="relative flex flex-col items-center justify-center text-neutral-500 hover:text-amber-800 transition-colors py-1 flex-1 focus:outline-none">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+      </svg>
+      <span class="text-[9px] font-bold mt-1">Keranjang</span>
+      <span class="cart-count-badge absolute top-0.5 right-4 xs:right-6 bg-amber-800 text-white text-[8px] font-bold w-4 h-4 rounded-full flex items-center justify-center border border-white scale-0 transition-transform duration-200">0</span>
+    </button>
+  </div>
 
   <!-- Main JavaScript modules -->
   <script src="./products.js"></script>
