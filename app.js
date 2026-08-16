@@ -23,7 +23,7 @@ const paymentDetailsContainer = document.getElementById('payment-details-contain
 const historySidebar = document.getElementById('history-sidebar');
 const historyOverlay = document.getElementById('history-overlay');
 const historyItemsContainer = document.getElementById('history-items');
-const historyCountBadge = document.getElementById('history-count-badge');
+const historyCountBadges = document.querySelectorAll('.history-count-badge');
 
 // Format Currency to Rupiah
 function formatRupiah(number) {
@@ -243,37 +243,37 @@ function renderProducts() {
           <img src="${imgUrl}" alt="${product.name}" 
             id="img-catalog-${product.id}"
             class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500">
-          <span class="absolute top-4 left-4 bg-black text-white text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">
+          <span class="absolute top-2 left-2 sm:top-4 sm:left-4 bg-black text-white text-[9px] sm:text-xs font-semibold px-2 py-0.5 sm:px-3 sm:py-1 rounded-full uppercase tracking-wider">
             Premium
           </span>
         </div>
-        <div class="p-6 flex-1 flex flex-col justify-between">
+        <div class="p-3 xs:p-4 sm:p-6 flex-1 flex flex-col justify-between">
           <div>
-            <h3 class="font-semibold text-lg text-neutral-900 group-hover:text-amber-700 transition-colors duration-200">
+            <h3 class="font-bold text-sm xs:text-base sm:text-lg text-neutral-900 group-hover:text-amber-700 transition-colors duration-200 line-clamp-1 sm:line-clamp-none">
               ${product.name}
             </h3>
-            <p class="text-neutral-500 text-sm mt-1 line-clamp-2">${product.description}</p>
+            <p class="text-neutral-500 text-[11px] sm:text-sm mt-1 line-clamp-2">${product.description}</p>
             
             <!-- Quick Color Dots -->
-            <div class="flex items-center gap-1.5 mt-3">
+            <div class="flex items-center gap-1 sm:gap-1.5 mt-2 sm:mt-3">
               ${product.colors.map(color => `
                 <button 
                   title="${color.name}"
                   onclick="changeCatalogImage('${product.id}', '${color.key}', '${product.images[color.key]}')"
-                  class="w-4 h-4 rounded-full border border-neutral-300 focus:outline-none focus:ring-1 focus:ring-black transition-all hover:scale-110"
+                  class="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full border border-neutral-300 focus:outline-none focus:ring-1 focus:ring-black transition-all hover:scale-110"
                   style="background-color: ${color.hex}">
                 </button>
               `).join('')}
             </div>
           </div>
           
-          <div class="mt-6 pt-4 border-t border-neutral-50 flex items-center justify-between">
-            <span class="font-bold text-neutral-900 text-lg">${formatRupiah(product.basePrice)}</span>
+          <div class="mt-4 pt-3 sm:mt-6 sm:pt-4 border-t border-neutral-50 flex flex-col xs:flex-row xs:items-center justify-between gap-2 xs:gap-0">
+            <span class="font-extrabold text-neutral-900 text-sm xs:text-base sm:text-lg">${formatRupiah(product.basePrice)}</span>
             <button 
               onclick="openProductModal('${product.id}')"
-              class="bg-neutral-900 hover:bg-amber-800 text-white font-medium text-sm px-4 py-2.5 rounded-xl transition-all duration-200 shadow-sm flex items-center gap-1">
+              class="bg-neutral-900 hover:bg-amber-800 text-white font-semibold text-xs sm:text-sm px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl transition-all duration-200 shadow-sm flex items-center justify-center gap-1 w-full xs:w-auto">
               Pilih Opsi
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
               </svg>
             </button>
@@ -327,9 +327,9 @@ function renderProductModal() {
   // Dynamic content structure inside the modal container
   const container = document.getElementById('product-modal-content');
   container.innerHTML = `
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
       <!-- Product Images & Preview -->
-      <div class="aspect-square w-full rounded-2xl overflow-hidden bg-neutral-50 border border-neutral-100">
+      <div class="aspect-[4/3] md:aspect-square w-full max-h-[260px] md:max-h-none rounded-2xl overflow-hidden bg-neutral-50 border border-neutral-100 flex items-center justify-center">
         <img id="modal-product-image" src="${currentImage}" alt="${product.name}" class="w-full h-full object-cover">
       </div>
 
@@ -593,8 +593,8 @@ function updateCartUI() {
       .join(', ');
       
     return `
-      <div class="flex gap-4 py-4 border-b border-neutral-100 items-start">
-        <div class="w-20 h-20 rounded-xl overflow-hidden bg-neutral-50 border border-neutral-100 flex-shrink-0">
+      <div class="flex gap-3 sm:gap-4 py-4 border-b border-neutral-100 items-start">
+        <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden bg-neutral-50 border border-neutral-100 flex-shrink-0">
           <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover">
         </div>
         <div class="flex-1 min-w-0">
@@ -602,17 +602,17 @@ function updateCartUI() {
           <p class="text-xs text-neutral-500 mt-0.5">
             Warna: ${item.color} | Ukuran: ${item.size}
           </p>
-          ${optionsText ? `<p class="text-xs text-amber-800/80 font-medium mt-1">${optionsText}</p>` : ''}
+          ${optionsText ? `<p class="text-[10px] sm:text-xs text-amber-800/80 font-medium mt-0.5 sm:mt-1">${optionsText}</p>` : ''}
           
-          <div class="flex items-center justify-between mt-3">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mt-3">
             <!-- Qty Selectors -->
-            <div class="flex items-center border border-neutral-200 rounded-lg overflow-hidden bg-white text-xs">
+            <div class="flex items-center border border-neutral-200 rounded-lg overflow-hidden bg-white text-xs w-fit">
               <button onclick="adjustCartItemQty('${item.cartItemId}', -1)" class="px-2.5 py-1 text-neutral-500 hover:bg-neutral-100 focus:outline-none">-</button>
               <span class="px-3 py-1 font-semibold text-neutral-900 min-w-[2rem] text-center">${item.quantity}</span>
               <button onclick="adjustCartItemQty('${item.cartItemId}', 1)" class="px-2.5 py-1 text-neutral-500 hover:bg-neutral-100 focus:outline-none">+</button>
             </div>
             
-            <div class="flex items-center gap-3">
+            <div class="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto">
               <span class="text-sm font-bold text-neutral-900">${formatRupiah(item.totalPrice)}</span>
               <button onclick="removeCartItem('${item.cartItemId}')" class="text-neutral-400 hover:text-red-500 transition-colors focus:outline-none">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" class="w-4 h-4">
@@ -661,9 +661,19 @@ function saveOrders() {
 
 // Update History Display & Count
 function updateHistoryUI() {
-  if (!historyCountBadge || !historyItemsContainer) return;
+  if (!historyItemsContainer) return;
   
-  historyCountBadge.innerText = orders.length;
+  const totalOrders = orders.length;
+  historyCountBadges.forEach(badge => {
+    badge.innerText = totalOrders;
+    if (totalOrders > 0) {
+      badge.classList.remove('scale-0');
+      badge.classList.add('scale-100');
+    } else {
+      badge.classList.remove('scale-100');
+      badge.classList.add('scale-0');
+    }
+  });
 
   if (orders.length === 0) {
     historyItemsContainer.innerHTML = `
